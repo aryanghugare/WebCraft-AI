@@ -2,7 +2,7 @@ import React from 'react'
 
 function App() {
   return (
-    <div>Welcome to the Website Builder</div>
+    <div>This is for react</div>
   )
 }
 
