@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes , Route } from 'react-router-dom';
+import { Routes , Route , useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Pricing from './pages/Pricing';
 import Projects from './pages/Projects';
@@ -9,10 +9,20 @@ import Community from './pages/Community';
 import View from './pages/View';
 
 import Loading from './components/LoaderSteps';
+import Navbar from './components/Navbar';
 
 function App() {
+
+
+  const { pathname } = useLocation()
+
+  const hideNavbar = pathname.startsWith('/projects/') && pathname !== '/projects'
+                      || pathname.startsWith('/view/')
+                      || pathname.startsWith('/preview/')
   return (
-    <div className='bg-gray-500 p-4 rounded-lg shadow-md text-amber-200'  >
+    <div >
+
+  {!hideNavbar && <Navbar />}
 <Routes>
 <Route path='/' element={<Home />} />
         <Route path='/pricing' element={<Pricing />} />
