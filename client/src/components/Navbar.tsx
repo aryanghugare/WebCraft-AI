@@ -1,8 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link , useNavigate } from 'react-router-dom';
 
 function Navbar() {
-  const [, setMenuOpen] = React.useState(false);
+const [menuOpen, setMenuOpen] = React.useState(false);
+const navigate = useNavigate();
 
   return (
    <>
@@ -22,8 +23,16 @@ function Navbar() {
 
           <div className="flex items-center gap-3">
           
+      <button onClick={()=> navigate('/auth/signin')} className="px-6 py-1.5 max-sm:text-sm bg-indigo-600 active:scale-95 hover:bg-indigo-700 transition rounded">
+              Get started
+            </button>
 
-            <button id="open-menu" className="md:hidden active:scale-90 transition" onClick={() => setMenuOpen(true)} >
+ {/* <button className='bg-white/10 px-5 py-1.5 text-xs sm:text-sm border text-gray-200 rounded-full'>
+            
+            </button> */}
+
+
+            <button id="open-menu" className="md:hidden active:scale-90 transition hover:bg-indigo-700  rounded" onClick={() => setMenuOpen(true)} >
             <svg xmlns="http://www.w3.org/2000/svg" width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h16"/><path d="M4 12h16"/><path d="M4 19h16"/></svg>
           </button>
           </div>
@@ -31,6 +40,17 @@ function Navbar() {
           
         </nav>
         {/* Mobile Menu */}
+ {menuOpen && (
+          <div className="fixed inset-0 z-[100] bg-black/60 text-white backdrop-blur flex flex-col items-center justify-center text-lg gap-8 md:hidden transition-transform duration-300">
+            <Link to='/' onClick={() => setMenuOpen(false)}>Home</Link>
+            <Link to='/projects' onClick={() => setMenuOpen(false)}>My Projects</Link>
+            <Link to='/community' onClick={() => setMenuOpen(false)}>Community</Link>
+            <Link to='/pricing' onClick={() => setMenuOpen(false)}>Pricing</Link>
+            <button className="active:ring-3 active:ring-white aspect-square size-10 p-1 items-center justify-center bg-slate-100 hover:bg-slate-200 transition text-black rounded-md flex" onClick={() => setMenuOpen(false)} >
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+            </button>
+          </div>
+        )}
        
         {/* BACKGROUND IMAGE */}
           <svg className="absolute inset-0 -z-10 size-full blur-[300px]" width="1440" height="900" viewBox="0 0 1440 900" fill="none" xmlns="http://www.w3.org/2000/svg">
