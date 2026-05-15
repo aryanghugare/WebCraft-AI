@@ -1,15 +1,26 @@
 # WebCraft AI — AI‑Powered Website Builder
 
-WebCraft AI is a (work-in-progress) AI-powered website builder that turns a plain-English prompt into a website you can preview, iterate on, and eventually publish.
+WebCraft AI is an AI-powered website builder that aims to turn a plain-English prompt into a website you can preview, iterate on, and eventually publish.
 
-The repo currently contains a Vite + React front-end with the core pages and UI scaffolding for:
+## Project Status
 
-- A prompt-based “Create with AI” landing flow
-- Project listing (with mini iframe previews via `srcDoc`)
+This project is **in active development**.
+
+The current workspace focuses on the front-end experience and UI scaffolding. Backend APIs and persistence are planned (see the Prisma schema), but are not wired up in this repo yet.
+
+## What’s Implemented (Current)
+
+- Prompt-based “Create with AI” landing flow (UI)
+- Project listing view (includes mini iframe previews via `srcDoc`)
 - Pricing page UI
-- A step-based loader screen
+- Step-based loading screen
+- Core routing + shared layout components
 
-Backend + database wiring is planned (see Prisma schema), but not implemented in this workspace yet.
+## What’s Planned (Next)
+
+- Backend generation API integration for the “Create with AI” flow
+- Project persistence (users, projects, versions, conversations) via Postgres + Prisma
+- Editor/preview workflow improvements (versioning, switching, saving)
 
 ## Tech Stack
 
@@ -24,10 +35,10 @@ Backend + database wiring is planned (see Prisma schema), but not implemented in
 
 ### Prerequisites
 
-- Node.js (recommended: latest LTS)
+- Node.js (latest LTS recommended)
 - npm
 
-### Run the web app (client)
+### Run the client
 
 ```bash
 cd client
@@ -53,17 +64,18 @@ npm run preview
 	- `src/components/` — shared UI components (Navbar, loader steps, editor panel, etc.)
 	- `src/assets/` — local assets + sample data used in the UI
 - `server/` — placeholder for a future backend
-- `client/assets/schema.prisma` — Prisma schema for planned Postgres models (users, projects, versions, conversations)
+- `client/assets/schema.prisma` — Prisma schema for planned Postgres models
 
-## Current Status / Notes
+## Notes
 
-- The UI is functional for navigation and layout.
-- AI generation and persistence are not wired up yet (you’ll see TODOs where API calls should happen).
-- Some pages/routes are placeholders while the data layer is being integrated.
+- Some routes/pages are placeholders while the data layer is being integrated.
+- Where applicable, TODOs mark intended API boundaries.
 
-## Roadmap (high-level)
+## Contributing
 
-- Connect the “Create with AI” flow to a backend generation API
-- Save projects, versions, and conversations in Postgres (Prisma)
-- Add project editor + version switching in Preview
+Contributions are welcome while the project is evolving. If you plan to make larger changes, consider opening an issue first to align on scope and direction.
+
+## License
+
+No license has been specified yet.
 
