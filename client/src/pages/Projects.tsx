@@ -3,10 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { Project } from '../types'
 import { ArrowBigDownDashIcon, EyeIcon, EyeOffIcon, FullscreenIcon, LaptopIcon, Loader2Icon, MessageSquareIcon, SaveIcon, SmartphoneIcon, TabletIcon, XIcon } from 'lucide-react'
 import Sidebar from '../components/Sidebar'
+import { dummyProjects , dummyConversations } from '../assets/assets'
 
 
-
-import { Loader2Icon } from 'lucide-react';
 
 const Projects = () => {
 const {projectId} = useParams() ;
@@ -15,15 +14,25 @@ const navigate = useNavigate();
 const [project, setProject]= useState<Project | null>(null);
 const [loading, setLoading] = useState(true);
 
-const [isGenerating, setIsGenerating] = useState(true);
-const [device, setDevice] = useState<'phone' | 'desktop'>('desktop');
+const [isGenerating, setIsGenerating] = useState(true); // During prompt generation  
+const [device, setDevice] = useState<'phone' | 'desktop'| 'tablet'>('desktop');
 
 
 const [isMenuOpen, setIsMenuOpen] = useState(false);
 const [isSaving, setIsSaving] = useState(false);
 
 const fetchProject = async () => {
-    
+   const project = dummyProjects.find(project => project.id === projectId);
+   setTimeout(()=>{
+if(project){
+console.log("The project is: ",project)
+ setProject({...project , conversation : dummyConversations})
+setLoading(false);
+setIsGenerating(project.current_code ? false : true) ;
+ }
+
+},2000)
+
   }
 
 const saveProject = async () => {
@@ -40,7 +49,8 @@ const saveProject = async () => {
   }
 
 useEffect(()=>{
-fetchProject();
+fetchProject()
+
 },[])
 
 
@@ -100,7 +110,12 @@ if(loading){
         </div>
       </div>
       <div className='flex-1 flex overflow-auto'>
-             
+           <Sidebar isMenuOpen={isMenuOpen} project={project} setProject={(p)=>setProject(p)} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
+
+              <div className='flex-1 p-2 pl-0'>
+              Project Preview
+              </div>
+
       </div>
     </div>
   )
