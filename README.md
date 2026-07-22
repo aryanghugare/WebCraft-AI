@@ -1,7 +1,8 @@
 # WebCraft AI — AI‑Powered Website Builder
 
-WebCraft AI is an AI-powered website builder that aims to turn a plain-English prompt into a website you can preview, iterate on, and eventually publish.
+WebCraft AI is an AI-powered website builder, similar in spirit to Replit-style web creation workflows, that aims to turn a plain-English prompt into a website you can preview, iterate on, and eventually publish.
 
+It focuses on fast AI-assisted website generation and iteration directly in the browser.
 ## Project Status
 
 This project is **in active development**.
