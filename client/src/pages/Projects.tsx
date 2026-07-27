@@ -3,7 +3,9 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { Project } from '../types'
 import { ArrowBigDownDashIcon, EyeIcon, EyeOffIcon, FullscreenIcon, LaptopIcon, Loader2Icon, MessageSquareIcon, SaveIcon, SmartphoneIcon, TabletIcon, XIcon } from 'lucide-react'
 import Sidebar from '../components/Sidebar'
-import { dummyProjects , dummyConversations } from '../assets/assets'
+import { dummyProjects , dummyConversations, dummyVersion } from '../assets/assets'
+import ProjectPreview from '../components/ProjectPreview'
+import { type ProjectPreviewRef } from '../components/ProjectPreview'
 
 
 
@@ -21,12 +23,14 @@ const [device, setDevice] = useState<'phone' | 'desktop'| 'tablet'>('desktop');
 const [isMenuOpen, setIsMenuOpen] = useState(false);
 const [isSaving, setIsSaving] = useState(false);
 
+  const previewRef = useRef<ProjectPreviewRef>(null)
+
 const fetchProject = async () => {
    const project = dummyProjects.find(project => project.id === projectId);
    setTimeout(()=>{
 if(project){
 console.log("The project is: ",project)
- setProject({...project , conversation : dummyConversations})
+ setProject({...project , conversation : dummyConversations,versions : dummyVersion})
 setLoading(false);
 setIsGenerating(project.current_code ? false : true) ;
  }
@@ -113,7 +117,7 @@ if(loading){
            <Sidebar isMenuOpen={isMenuOpen} project={project} setProject={(p)=>setProject(p)} isGenerating={isGenerating} setIsGenerating={setIsGenerating}/>
 
               <div className='flex-1 p-2 pl-0'>
-              Project Preview
+              <ProjectPreview ref={previewRef} project={project} isGenerating = {isGenerating} device={device}/>
               </div>
 
       </div>

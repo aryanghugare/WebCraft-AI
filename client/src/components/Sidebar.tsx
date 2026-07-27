@@ -27,7 +27,10 @@ const Sidebar = ({isMenuOpen, project, setProject, isGenerating, setIsGenerating
 
     const handleRevisions = async (e: React.FormEvent) => {
         e.preventDefault()
-      
+        setIsGenerating(true) 
+        setTimeout(()=>{
+         setIsGenerating(false) 
+         },3000)
     }
 
     useEffect(()=>{
