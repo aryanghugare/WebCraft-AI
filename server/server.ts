@@ -1,23 +1,25 @@
-import express from 'express' ;
-import dotenv from 'dotenv' ;
-import cors from 'cors' ;
+import "dotenv/config";
+import express, { Request, Response } from 'express';
+import cors from "cors";
 
-dotenv.config({path : "./.env"}) ;
-
-
-
-const app = express() ;
-
-const port = 3000; 
+const app = express();
 
 const corsOptions = {
     origin: process.env.TRUSTED_ORIGINS?.split(',') || [],
     credentials: true,
 }
-app.use(express.json({limit: '50mb'})) ;
+
+
+// Middleware
 app.use(cors(corsOptions)) ;
+app.use(express.json());
+
+const port = process.env.PORT || 3000;
+
+app.get('/', (req: Request, res: Response) => {
+    res.send('Server is Live!');
+});
 
 app.listen(port, () => {
     console.log(`Server is running at http://localhost:${port}`);
 });
-
