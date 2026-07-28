@@ -7,9 +7,11 @@ import MyProjects from './pages/MyProjects';
 import Preview from './pages/Preview';
 import Community from './pages/Community';
 import View from './pages/View';
+import { Toaster } from "@/components/ui/sonner"
 
 import Loading from './components/LoaderSteps';
 import Navbar from './components/Navbar';
+import AuthPage from './pages/auth/AuthPage';
 
 function App() {
 
@@ -21,7 +23,7 @@ function App() {
                       || pathname.startsWith('/preview/')
   return (
     <div >
-
+<Toaster/>
   {!hideNavbar && <Navbar />}
 <Routes>
 <Route path='/' element={<Home />} />
@@ -32,6 +34,7 @@ function App() {
         <Route path='/preview/:projectId/:versionId' element={<Preview />} />
         <Route path='/community' element={<Community />} />
         <Route path='/view/:projectId' element={<View />} />
+        <Route path="/auth/:pathname" element={<AuthPage />} />
 
         <Route path='/loading' element={<Loading />}/>
 </Routes>
