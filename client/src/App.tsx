@@ -12,6 +12,7 @@ import { Toaster } from "@/components/ui/sonner"
 import Loading from './components/LoaderSteps';
 import Navbar from './components/Navbar';
 import AuthPage from './pages/auth/AuthPage';
+import Settings from './pages/Settings';
 
 function App() {
 
@@ -35,7 +36,7 @@ function App() {
         <Route path='/community' element={<Community />} />
         <Route path='/view/:projectId' element={<View />} />
         <Route path="/auth/:pathname" element={<AuthPage />} />
-
+        <Route path="/account/settings" element={<Settings />} />
         <Route path='/loading' element={<Loading />}/>
 </Routes>
 
