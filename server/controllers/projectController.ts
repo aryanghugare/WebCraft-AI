@@ -281,7 +281,7 @@ export const getPublishedProjects = async (req: Request, res: Response) => {
             include: {user: true}
         })
 
-        res.json({ projects });
+       return res.json({message : "Published Projects!!!" , projects });
     } catch (error : any) {
         console.log(error.code || error.message);
         res.status(500).json({ message: error.message });
@@ -302,7 +302,7 @@ export const getProjectById = async (req: Request, res: Response) => {
             return res.status(404).json({ message: 'Project not found' });
         }
 
-        res.json({ code: project.current_code });
+      return res.json({ code: project.current_code , message : `Project with the id ${projectId} `});
     } catch (error : any) {
         console.log(error.code || error.message);
         res.status(500).json({ message: error.message });
@@ -338,7 +338,7 @@ export const saveProjectCode = async (req: Request, res: Response) => {
             data: {current_code: code, current_version_index: ''}
         })
 
-        res.json({ message: 'Project saved successfully' });
+       return res.json({ message: 'Project saved successfully' });
     } catch (error : any) {
         console.log(error.code || error.message);
         res.status(500).json({ message: error.message });
