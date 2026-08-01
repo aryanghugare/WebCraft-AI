@@ -76,7 +76,7 @@ export const createUserProject = async (req: Request, res: Response) => {
 
         // Enhance user prompt 
        const promptEnhanceResponse = await openai.chat.completions.create({
-            model: 'cohere/north-mini-code:free',
+            model: 'openai/gpt-oss-20b:free', // cohere/north-mini-code:free can also be used here
             messages: [
                 {
                     role: 'system',
@@ -251,8 +251,8 @@ console.log("Website Specification:", websiteSpec);
 
 const codeGenerationResponse = await openai.chat.completions.create({
     model: "openai/gpt-oss-20b:free",
-    temperature: 0.5,
-    max_tokens: 7000,
+    // temperature: 0.5,
+    // max_tokens: 7000,
     messages: [
         {
             role: "system",
