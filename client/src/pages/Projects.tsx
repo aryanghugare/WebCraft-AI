@@ -3,15 +3,18 @@ import { Link, useNavigate, useParams } from 'react-router-dom'
 import type { Project } from '../types'
 import { ArrowBigDownDashIcon, EyeIcon, EyeOffIcon, FullscreenIcon, LaptopIcon, Loader2Icon, MessageSquareIcon, SaveIcon, SmartphoneIcon, TabletIcon, XIcon } from 'lucide-react'
 import Sidebar from '../components/Sidebar'
-import { dummyProjects , dummyConversations, dummyVersion } from '../assets/assets'
 import ProjectPreview from '../components/ProjectPreview'
 import { type ProjectPreviewRef } from '../components/ProjectPreview'
+import { toast } from 'sonner'
+import api from '@/configs/axios'
+import { authClient } from '@/lib/auth-client'
 
 
 
 const Projects = () => {
 const {projectId} = useParams() ;
 const navigate = useNavigate();
+  const {data: session, isPending} = authClient.useSession()
 
 const [project, setProject]= useState<Project | null>(null);
 const [loading, setLoading] = useState(true);
@@ -26,17 +29,18 @@ const [isSaving, setIsSaving] = useState(false);
   const previewRef = useRef<ProjectPreviewRef>(null)
 
 const fetchProject = async () => {
-   const project = dummyProjects.find(project => project.id === projectId);
-   setTimeout(()=>{
-if(project){
-console.log("The project is: ",project)
- setProject({...project , conversation : dummyConversations,versions : dummyVersion})
-setLoading(false);
-setIsGenerating(project.current_code ? false : true) ;
- }
-
-},2000)
-
+ // Before the fetching of the project was from the assets 
+ try {
+      const { data } = await api.get(`/api/user/project/${projectId}`);
+    console.log("The data from the frontend is " , data) ;
+      setProject(data.project)
+       console.log("Data in the frontend" , data) ;
+      setIsGenerating(data.project.current_code ? false : true)
+      setLoading(false)
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message);
+      console.log(error);
+    }
   }
 
 const saveProject = async () => {
@@ -64,10 +68,23 @@ const saveProject = async () => {
   
   }
 
+// This is for the first time opening of the webpage
 useEffect(()=>{
-fetchProject()
+    if(session?.user){
+      fetchProject();
+    }else if(!isPending && !session?.user){
+      navigate("/")
+      toast("Please login to view your projects")
+    }
+  },[session?.user])
 
-},[])
+
+ useEffect(()=>{
+    if(project && !project.current_code){
+      const intervalId = setInterval(fetchProject, 10000);
+      return ()=> clearInterval(intervalId)
+    }
+  },[project])
 
 
 if(loading){

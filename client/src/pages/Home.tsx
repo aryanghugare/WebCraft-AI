@@ -1,19 +1,35 @@
 import { useState } from "react";
 import { Loader2Icon } from 'lucide-react';
+import { authClient } from "@/lib/auth-client";
+import { toast } from "sonner";
+import api from "@/configs/axios";
+import { useNavigate } from "react-router-dom";
 
 
 
 export default function Home() {
- const [inout, setInout] = useState("");
+ const {data: session} = authClient.useSession() ;
+const navigate = useNavigate() ;
+ const [input, setInput] = useState("");
 const [loading, setLoading] = useState(false);
 
 const onSubmitEventHandler = async (e: React.FormEvent) => {
-e.preventDefault();
-setLoading(true);
-// TODO: make API call to backend to generate website
-setTimeout(()=>{
-setLoading(false);
-},3000)
+ e.preventDefault();
+    try {
+      if(!session?.user){
+        return toast.error('Please sign in to create a project')
+      }else if(!input.trim()){
+        return toast.error('Please enter a message')
+      }
+      setLoading(true)
+      const {data} = await api.post('/api/user/project', {initial_prompt: input});
+      setLoading(false);
+      navigate(`/projects/${data.projectId}`)
+    } catch (error: any) {
+      setLoading(false);
+      toast.error(error?.response?.data?.message || error.message);
+      console.log(error);
+    }
 
 }
 
@@ -37,7 +53,7 @@ setLoading(false);
         </p>
 
         <form onSubmit={onSubmitEventHandler} className="mt-10 flex w-full max-w-2xl flex-col rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur transition focus-within:border-indigo-500/40 focus-within:ring-2 focus-within:ring-indigo-500/20">
-          <textarea value={inout} onChange={e => setInout(e.target.value)} className="w-full resize-none bg-transparent text-base text-slate-200 placeholder:text-slate-500 outline-none" rows={4} placeholder="Describe your presentation in details" required />
+          <textarea value={input} onChange={e => setInput(e.target.value)} className="w-full resize-none bg-transparent text-base text-slate-200 placeholder:text-slate-500 outline-none" rows={4} placeholder="Describe your presentation in details" required />
           <button className="mt-3 inline-flex h-11 self-end items-center justify-center gap-2 rounded-lg bg-indigo-600 px-4 text-sm font-medium text-white whitespace-nowrap transition hover:bg-indigo-500 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-400/40">
             {!loading ? 'Create with AI' : (
               <>
