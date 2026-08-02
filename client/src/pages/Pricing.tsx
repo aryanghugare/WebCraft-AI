@@ -1,6 +1,9 @@
 import React from 'react';
 import { appPlans } from '../assets/assets.ts';
 import Footer from '../components/Footer';
+import api from '@/configs/axios.ts';
+import { authClient } from '@/lib/auth-client.ts';
+import { toast } from 'sonner';
 
 interface Plan {
     id: string;
@@ -12,10 +15,19 @@ interface Plan {
 }
 
 const Pricing = () => {
- const [plans] = React.useState<Plan[]>(appPlans);
- const handlePurchase = async (planId: string) => {
-
-}
+    const { data: session } = authClient.useSession();
+    const [plans] = React.useState<Plan[]>(appPlans);
+    const handlePurchase = async (planId: string) => {
+        try {
+            if (!session?.user) return toast('Please login to purchase credits')
+            const { data } = await api.post('/api/user/purchase-credits', { planId })
+           // Redirecting the user to the payement link
+            window.location.href = data.payment_link;
+        } catch (error: any) {
+            toast.error(error?.response?.data?.message || error.message);
+            console.log(error);
+        }
+    }
   return (
    <>
  <div className='w-full max-w-5xl mx-auto z-20 max-md:px-4 min-h-[80vh]'>
