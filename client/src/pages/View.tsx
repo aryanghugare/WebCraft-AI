@@ -4,6 +4,8 @@ import { dummyProjects } from '../assets/assets';
 import { Loader2Icon } from 'lucide-react';
 import type { Project } from '../types';
 import ProjectPreview from '../components/ProjectPreview';
+import { toast } from 'sonner';
+import api from '@/configs/axios';
 
 const View = () => {
 
@@ -13,14 +15,25 @@ const [loading, setLoading] = useState(true)
 
 // function to fetch 
 const fetchCode = async () => {
-const code = dummyProjects.find((project)=> project.id === projectId)?.current_code ;
+try {
 
-setTimeout(()=>{
-if(code) {
-setCode(code);
-setLoading(false) ;
-}
-},2000)
+  const code = dummyProjects.find((project) => project.id === projectId)?.current_code;
+  if (code) {
+    setCode(code);
+    setLoading(false);
+  }
+  else {
+    const { data } = await api.get(`/api/project/published/${projectId}`);
+    if (data) setCode(data.code)
+  }
+
+      setLoading(false)
+      
+        
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || error.message);
+      console.log("Error while fetching the code" ,error);
+    }
 }
 
 
