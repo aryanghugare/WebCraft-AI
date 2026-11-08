@@ -36,19 +36,30 @@ export const stripeWebhook = async (request: Request, response: Response)=>{
 
       const session = sessionList.data[0];
    // Meta data was added by me while creating the session in the controller
-      const {transactionId, appId} = session.metadata as {transactionId: string; appId: string}
+      const {transactionId, appId} = (session?.metadata ?? {}) as {transactionId?: string; appId?: string}
 
       if(appId === 'ai-site-builder' && transactionId){
-       // Payment is successfull here 
-        const transaction = await prisma.transaction.update({
-            where: {id: transactionId},
-            data: {isPaid: true}
-        })
+       // Payment is successful here.
+       // Stripe can deliver the same event more than once, so credits are added
+       // only when this call is the one that flips the transaction from unpaid to paid.
+        await prisma.$transaction(async (tx) => {
+          const { count } = await tx.transaction.updateMany({
+              where: {id: transactionId, isPaid: false},
+              data: {isPaid: true}
+          })
 
-        // Add the credits to the user data
-        await prisma.user.update({
-            where: {id: transaction.userId},
-            data: {credits: {increment: transaction.credits}}
+          // Already paid: a duplicate delivery, so don't add credits again
+          if (count === 0) return;
+
+          const transaction = await tx.transaction.findUniqueOrThrow({
+              where: {id: transactionId}
+          })
+
+          // Add the credits to the user data
+          await tx.user.update({
+              where: {id: transaction.userId},
+              data: {credits: {increment: transaction.credits}}
+          })
         })
       }
       break;
